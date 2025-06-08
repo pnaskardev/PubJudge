@@ -2,6 +2,7 @@ package routes
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/pnaskardev/pubjudge/gateway/routes/health"
 	"github.com/pnaskardev/pubjudge/gateway/routes/submit"
 )
 
@@ -14,7 +15,6 @@ func NewRoute(App *fiber.App) *Router {
 }
 
 func (r *Router) SetupRoutes() {
-
+	health.NewHealthCheckRoutes(r.app).Register()
 	submit.NewSubmissionRoutes(r.app).Register()
-
 }
