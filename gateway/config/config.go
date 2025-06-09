@@ -20,5 +20,9 @@ func Init() {
 		Password: mongo_password,
 	}
 
-	mongo_db.ConnectToMongoDB(&mongo_db_params)
+	mongo_connection_result := mongo_db.ConnectToMongoDB(&mongo_db_params)
+	if mongo_connection_result == nil {
+		panic("Mongo Connection Failed")
+	}
+
 }
