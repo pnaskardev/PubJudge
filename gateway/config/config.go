@@ -10,7 +10,6 @@ import (
 func Init() {
 	mongo_username := os.Getenv("MONGO_USERNAME")
 	mongo_password := os.Getenv("MONGO_PASSWORD")
-
 	if mongo_username == "" || mongo_password == "" {
 		panic("Mongo DB Connection Parameters not found")
 	}
@@ -24,5 +23,4 @@ func Init() {
 	if mongo_connection_result == nil {
 		panic("Mongo Connection Failed")
 	}
-
 }
