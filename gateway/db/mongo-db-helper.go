@@ -15,10 +15,9 @@ const dbName = "pub-judge"
 func ConnectToMongoDB(params *types.MongoClientConnectionParams) *types.MongoClientStruct {
 
 	var uri string = "mongodb+srv://pnaskardev:<db_password>@stream.vuocv.mongodb.net/?retryWrites=true&w=majority&appName=stream"
-	// if params.username != "" && params.password != "" {
-	// 	uri = fmt.Sprintf("mongodb+srv://%s:%s@stream.vuocv.mongodb.net/?retryWrites=true&w=majority&appName=stream", params.username, params.password)
-	// }
-
+	if params.Username != "" && params.Password != "" {
+		uri = fmt.Sprintf("mongodb+srv://%s:%s@stream.vuocv.mongodb.net/?retryWrites=true&w=majority&appName=stream", params.Username, params.Password)
+	}
 	// Use the SetServerAPIOptions() method to set the version of the Stable API on the client
 	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
 	opts := options.Client().ApplyURI(uri).SetServerAPIOptions(serverAPI)
