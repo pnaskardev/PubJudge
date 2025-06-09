@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/pnaskardev/pubjudge/gateway/constants/types"
+	mongo_types "github.com/pnaskardev/pubjudge/gateway/types/mongo_types"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
 	"go.mongodb.org/mongo-driver/v2/mongo/readpref"
@@ -12,7 +12,7 @@ import (
 
 const dbName = "pub-judge"
 
-func ConnectToMongoDB(params *types.MongoClientConnectionParams) *types.MongoClientStruct {
+func ConnectToMongoDB(params *mongo_types.MongoClientConnectionParams) (*mongo_types.MongoClientStruct, error) {
 
 	var uri string = "mongodb+srv://pnaskardev:<db_password>@stream.vuocv.mongodb.net/?retryWrites=true&w=majority&appName=stream"
 	if params.Username != "" && params.Password != "" {
@@ -42,6 +42,6 @@ func ConnectToMongoDB(params *types.MongoClientConnectionParams) *types.MongoCli
 
 	var database mongo.Database = *client.Database(dbName)
 
-	return &types.MongoClientStruct{Client: client, Database: &database}
+	return &mongo_types.MongoClientStruct{Client: client, Database: &database}, nil
 
 }
