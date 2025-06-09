@@ -1,20 +1,27 @@
 package health
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"github.com/gofiber/fiber/v2"
 
-type HealthCheckStruct struct {
-	app *fiber.App
+	router_types "github.com/pnaskardev/pubjudge/gateway/types/router_types"
+)
+
+type HealthRouter struct {
+	Router *router_types.Router
 }
 
-func NewHealthCheckRoutes(app *fiber.App) *HealthCheckStruct {
-	return &HealthCheckStruct{app: app}
+func NewHealthCheckRoutes(router *router_types.Router) *HealthRouter {
+	return &HealthRouter{Router: router}
 }
 
-func (r *HealthCheckStruct) Register() {
+func (r *HealthRouter) Register() {
 
-	group := r.app.Group("/api")
+	group := r.Router.App.Group("/api")
 
 	group.Get("/ping", func(c *fiber.Ctx) error {
+
+		// r.Router.Deps.Db.Database.Collection("test").Aggregate([$match:{}])
+
 		return c.SendStatus(fiber.StatusOK)
 	})
 }

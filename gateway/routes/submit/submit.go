@@ -1,15 +1,15 @@
 package submit
 
 import (
-	"github.com/gofiber/fiber/v2"
+	"github.com/pnaskardev/pubjudge/gateway/types/router_types"
 )
 
 type SubmissionRoutes struct {
-	app *fiber.App
+	Router *router_types.Router
 }
 
-func NewSubmissionRoutes(app *fiber.App) *SubmissionRoutes {
-	return &SubmissionRoutes{app: app}
+func NewSubmissionRoutes(router *router_types.Router) *SubmissionRoutes {
+	return &SubmissionRoutes{Router: router}
 }
 
 func (r *SubmissionRoutes) Register() {

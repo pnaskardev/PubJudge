@@ -15,6 +15,11 @@ type AppConfig struct {
 	Redis redis_types.RedisClientConnectionParams
 }
 
+type App struct {
+	Db    *mongo_types.MongoClientStruct
+	Cache *redis_types.RedisClientStruct
+}
+
 func getEnvOrPanic(key string) string {
 	val := os.Getenv(key)
 	if val == "" {
@@ -38,7 +43,7 @@ func loadConfig() *AppConfig {
 	}
 }
 
-func Init() {
+func Init() (*App, error) {
 
 	config := loadConfig()
 
@@ -51,4 +56,7 @@ func Init() {
 	if redis_connnection_result == nil || err != nil {
 		panic("Mongo Connection Failed")
 	}
+
+	return &App{Db: mongo_connection_result, Cache: redis_connnection_result}, nil
+
 }

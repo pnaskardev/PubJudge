@@ -16,11 +16,12 @@ func main() {
 	if err != nil {
 		panic("ENV variables not loaded")
 	}
-	config.Init()
+	deps, err := config.Init()
 
 	app := fiber.New()
 
 	// populate all routes
-	routes.NewRoute(app).SetupRoutes()
+	routes.NewRoute(app, deps).SetupRoutes()
+
 	log.Fatal(app.Listen(":3000"))
 }
