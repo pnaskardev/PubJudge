@@ -31,6 +31,14 @@ func main() {
 
 	app := fiber.New()
 
+	app.Use(func(c *fiber.Ctx) error {
+		start := time.Now()
+		err := c.Next()
+		duration := time.Since(start)
+		c.Append("Server-Timing", "app;dur="+duration.String())
+		return err
+	})
+
 	// populate all routes
 	routes.NewRoute(app, deps).SetupRoutes()
 
