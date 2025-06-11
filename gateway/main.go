@@ -10,8 +10,8 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
+	"github.com/pnaskardev/pubjudge/gateway/api/routes"
 	"github.com/pnaskardev/pubjudge/gateway/config"
-	"github.com/pnaskardev/pubjudge/gateway/routes"
 )
 
 const idleTimeout = 5 * time.Second
