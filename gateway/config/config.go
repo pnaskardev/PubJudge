@@ -37,6 +37,7 @@ func loadConfig() *AppConfig {
 		Redis: redis_types.RedisClientConnectionParams{
 			Username: getEnvOrPanic("REDIS_USERNAME"),
 			Password: getEnvOrPanic("REDIS_PASSWORD"),
+			Host:     getEnvOrPanic("REDIS_HOST"),
 			Port:     getEnvOrPanic("REDIS_PORT"),
 			Database: getEnvOrPanic("REDIS_DATABASE"),
 		},
