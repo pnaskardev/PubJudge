@@ -18,10 +18,19 @@ func main() {
 	}
 	deps, err := config.Init()
 
+	if err != nil {
+		panic("Some Error Occured")
+	}
+
 	app := fiber.New()
 
 	// populate all routes
 	routes.NewRoute(app, deps).SetupRoutes()
+
+	// 404 Handler
+	app.Use(func(c *fiber.Ctx) error {
+		return c.SendStatus(404) // => 404 "Not Found"
+	})
 
 	log.Fatal(app.Listen(":3000"))
 }
