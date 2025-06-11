@@ -20,6 +20,6 @@ func (r *HealthRouter) Register() {
 
 		// r.Router.Deps.Db.Database.Collection("test").Aggregate([$match:{}])
 
-		return c.SendStatus(fiber.StatusOK)
+		return c.JSON(fiber.Map{"status": "success", "message": "Hello i'm ok!", "data": nil})
 	})
 }
