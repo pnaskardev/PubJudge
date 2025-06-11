@@ -7,5 +7,6 @@ import (
 
 type Router struct {
 	App  *fiber.App
+	Api  fiber.Router
 	Deps *config.App
 }

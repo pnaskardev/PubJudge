@@ -16,9 +16,7 @@ func NewHealthCheckRoutes(router *router_types.Router) *HealthRouter {
 
 func (r *HealthRouter) Register() {
 
-	group := r.Router.App.Group("/api")
-
-	group.Get("/ping", func(c *fiber.Ctx) error {
+	r.Router.Api.Get("/ping", func(c *fiber.Ctx) error {
 
 		// r.Router.Deps.Db.Database.Collection("test").Aggregate([$match:{}])
 
