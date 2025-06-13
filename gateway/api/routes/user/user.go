@@ -2,6 +2,7 @@ package user
 
 import (
 	user_handlers "github.com/pnaskardev/pubjudge/gateway/api/handlers/user"
+	"github.com/pnaskardev/pubjudge/gateway/api/middleware"
 	"github.com/pnaskardev/pubjudge/gateway/pkg/user"
 	"github.com/pnaskardev/pubjudge/gateway/types/router_types"
 )
@@ -22,5 +23,5 @@ func (r *UserRoutes) Register() {
 	userService := user.NewService(userRepo)
 
 	userRouteGroup := r.Router.Api.Group("/user")
-	userRouteGroup.Get("/get", user_handlers.GetUsers(userService))
+	userRouteGroup.Get("/get", middleware.Protected(), user_handlers.GetUsers(userService))
 }

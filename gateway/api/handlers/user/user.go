@@ -2,12 +2,49 @@ package user_handlers
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/pnaskardev/pubjudge/gateway/api/presenter"
 	"github.com/pnaskardev/pubjudge/gateway/pkg/entities"
 	"github.com/pnaskardev/pubjudge/gateway/pkg/user"
 )
+
+func Login(service user.Service) fiber.Handler {
+
+	return func(c *fiber.Ctx) error {
+
+		var input entities.LoginInput
+
+		if err := c.BodyParser(&input); err != nil {
+			return presenter.BadRequest(c, "Invalid Payload")
+		}
+
+		username := input.Username
+		pass := input.Password
+		if username != "ender" || pass != "ender" {
+			return presenter.BadRequest(c, "Invalid Payload")
+		}
+
+		// need to check in the db if the user is there or not
+		user, err := service.FetchUser(&input)
+		if user == nil || err != nil {
+			return presenter.LoginError(c, err)
+
+		}
+		token := jwt.New(jwt.SigningMethodHS256)
+		claims := token.Claims.(jwt.MapClaims)
+		claims["username"] = username
+		claims["exp"] = time.Now().Add(time.Duration(time.Hour * 72)).Unix()
+		t, err := token.SignedString([]byte("secret"))
+		if err != nil {
+			return c.SendStatus(fiber.StatusInternalServerError)
+		}
+		return presenter.LoginSuccess(c, user, t)
+	}
+
+}
 
 // AddUser is handler/controller which creates Books in the BookShop
 func AddUser(service user.Service) fiber.Handler {

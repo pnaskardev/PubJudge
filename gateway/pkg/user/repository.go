@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/pnaskardev/pubjudge/gateway/api/presenter"
+	"golang.org/x/crypto/bcrypt"
 
 	"github.com/pnaskardev/pubjudge/gateway/pkg/entities"
 
@@ -16,11 +17,11 @@ import (
 
 // Repository interface allows us to access the CRUD Operations in mongo here.
 type Repository interface {
+	FetchUser(Credentials *entities.LoginInput) (*entities.User, error)
 	CreateUser(User *entities.User) (*entities.User, error)
 	ReadUser() (*[]presenter.User, error)
 	UpdateUser(User *entities.User) (*entities.User, error)
 	DeleteUser(ID string) error
-	GetUsersWithSubmissions()
 }
 type repository struct {
 	Collection *mongo.Collection
@@ -31,6 +32,28 @@ func NewRepo(collection *mongo.Collection) Repository {
 	return &repository{
 		Collection: collection,
 	}
+}
+
+func (r *repository) FetchUser(Credentials *entities.LoginInput) (*entities.User, error) {
+
+	var user entities.User
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	err := r.Collection.FindOne(ctx, bson.M{"username": Credentials.Username}).Decode(&user)
+
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return nil, fmt.Errorf("User not found")
+		}
+		return nil, err
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(Credentials.Password))
+	if err != nil {
+		return nil, fmt.Errorf("Invalid credentials")
+	}
+	return &user, nil
 }
 
 // CreateUser is a mongo repository that helps to create Submits
@@ -81,8 +104,4 @@ func (r *repository) DeleteUser(ID string) error {
 		return err
 	}
 	return nil
-}
-
-func (r *repository) GetUsersWithSubmissions() {
-	fmt.Println("Get Users with Submissions called")
 }

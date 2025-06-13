@@ -7,11 +7,11 @@ import (
 
 // Service is an interface from which our api module can access our repository of all our models
 type Service interface {
+	FetchUser(Credentials *entities.LoginInput) (*entities.User, error)
 	InsertUser(User *entities.User) (*entities.User, error)
 	FetchUsers() (*[]presenter.User, error)
 	UpdateUser(User *entities.User) (*entities.User, error)
 	DeleteUsers(ID string) error
-	GetUsersWithSubmissions()
 }
 
 type service struct {
@@ -23,6 +23,10 @@ func NewService(r Repository) Service {
 	return &service{
 		repository: r,
 	}
+}
+
+func (s *service) FetchUser(Credentials *entities.LoginInput) (*entities.User, error) {
+	return s.repository.FetchUser(Credentials)
 }
 
 // InsertSubmit is a service layer that helps insert Submit in SubmitShop
@@ -43,8 +47,4 @@ func (s *service) UpdateUser(User *entities.User) (*entities.User, error) {
 // RemoveSubmit is a service layer that helps remove Submits from SubmitShop
 func (s *service) DeleteUsers(ID string) error {
 	return s.repository.DeleteUser(ID)
-}
-
-func (s *service) GetUsersWithSubmissions() {
-	s.repository.GetUsersWithSubmissions()
 }
