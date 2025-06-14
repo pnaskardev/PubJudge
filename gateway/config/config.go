@@ -55,7 +55,7 @@ func Init() (*App, error) {
 
 	redis_connnection_result, err := cache.NewRedisClient(&config.Redis)
 	if redis_connnection_result == nil || err != nil {
-		panic("Mongo Connection Failed")
+		panic("Redis Connection Failed")
 	}
 
 	return &App{Db: mongo_connection_result, Cache: redis_connnection_result}, nil
