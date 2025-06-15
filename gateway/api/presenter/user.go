@@ -22,12 +22,13 @@ type UserWithSubmission struct {
 // BookSuccessResponse is the singular SuccessResponse that will be passed in the response by
 // Handler
 func UserSuccessResponse(data *entities.User) *fiber.Map {
-	book := User{
-		ID: data.ID,
+	user := User{
+		ID:        data.ID,
+		Firstname: data.Firstname,
 	}
 	return &fiber.Map{
 		"status": true,
-		"data":   book,
+		"data":   user,
 		"error":  nil,
 	}
 }

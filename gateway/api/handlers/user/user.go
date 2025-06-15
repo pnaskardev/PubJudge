@@ -11,7 +11,6 @@ import (
 	"github.com/pnaskardev/pubjudge/gateway/api/presenter"
 	"github.com/pnaskardev/pubjudge/gateway/pkg/entities"
 	"github.com/pnaskardev/pubjudge/gateway/pkg/user"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -76,7 +75,6 @@ func AddUser(service user.Service) fiber.Handler {
 		// creating the user model
 		hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(requestBody.Password), bcrypt.DefaultCost)
 		user := entities.User{
-			ID:        primitive.NewObjectID(),
 			Firstname: requestBody.Firstname,
 			Lastname:  requestBody.Lastname,
 			Username:  requestBody.Username,
