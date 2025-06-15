@@ -28,11 +28,11 @@ func ConnectToMongoDB(params *mongo_types.MongoClientConnectionParams) (*mongo_t
 		panic(err)
 	}
 
-	defer func() {
-		if err = client.Disconnect(context.TODO()); err != nil {
-			panic(err)
-		}
-	}()
+	// defer func() {
+	// 	if err = client.Disconnect(context.TODO()); err != nil {
+	// 		panic(err)
+	// 	}
+	// }()
 
 	// Send a ping to confirm a successful connection
 	if err := client.Ping(context.TODO(), readpref.Primary()); err != nil {
@@ -44,4 +44,14 @@ func ConnectToMongoDB(params *mongo_types.MongoClientConnectionParams) (*mongo_t
 
 	return &mongo_types.MongoClientStruct{Client: client, Database: &database}, nil
 
+}
+
+func CloseDB(client *mongo.Client) error {
+	err := client.Disconnect(context.TODO())
+
+	if err != nil {
+		return err
+
+	}
+	return nil
 }

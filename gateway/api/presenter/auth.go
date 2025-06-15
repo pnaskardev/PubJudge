@@ -15,7 +15,7 @@ func LoginSuccess(c *fiber.Ctx, user *entities.User, token string) error {
 }
 
 func LoginError(c *fiber.Ctx, err error) error {
-	return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+	return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 		"error": err.Error(),
 	})
 }

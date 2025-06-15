@@ -3,6 +3,7 @@ package routes
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/pnaskardev/pubjudge/gateway/api/routes/auth"
 	"github.com/pnaskardev/pubjudge/gateway/api/routes/health"
 	"github.com/pnaskardev/pubjudge/gateway/api/routes/user"
 	"github.com/pnaskardev/pubjudge/gateway/config"
@@ -26,6 +27,8 @@ func (r *Router) SetupRoutes() {
 	// Health check does not needs any external dependencies
 
 	health.NewHealthCheckRoutes(r.Router).Register()
+
+	auth.NewAuthRoutes(r.Router).Register()
 
 	user.NewUserRoutes(r.Router).Register()
 }

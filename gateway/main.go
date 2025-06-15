@@ -66,7 +66,7 @@ func main() {
 	fmt.Println("Running cleanup tasks...")
 
 	// Your cleanup tasks go here
-	// db.Close()
+	config.Close(deps)
 	// redisConn.Close()
 	fmt.Println("Fiber was successful shutdown.")
 

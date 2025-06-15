@@ -61,3 +61,10 @@ func Init() (*App, error) {
 	return &App{Db: mongo_connection_result, Cache: redis_connnection_result}, nil
 
 }
+
+func Close(app *App) {
+
+	fmt.Println("Close invoked")
+
+	mongo_db.CloseDB(app.Db.Client)
+}

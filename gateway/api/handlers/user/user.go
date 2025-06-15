@@ -1,6 +1,7 @@
 package user_handlers
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
@@ -16,16 +17,19 @@ func Login(service user.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 
 		var input entities.LoginInput
-
 		if err := c.BodyParser(&input); err != nil {
 			return presenter.BadRequest(c, "Invalid Payload")
 		}
+		fmt.Printf("Username: %s, Password: %s\n", input.Username, input.Password)
 
 		username := input.Username
 		pass := input.Password
-		if username != "ender" || pass != "ender" {
-			return presenter.BadRequest(c, "Invalid Payload")
-		}
+
+		fmt.Println(pass)
+
+		// if username != "ender" || pass != "ender" {
+		// 	return presenter.BadRequest(c, "Invalid Payload")
+		// }
 
 		// need to check in the db if the user is there or not
 		user, err := service.FetchUser(&input)

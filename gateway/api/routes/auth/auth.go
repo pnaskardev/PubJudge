@@ -1,4 +1,4 @@
-package auth_router
+package auth
 
 import (
 	user_handlers "github.com/pnaskardev/pubjudge/gateway/api/handlers/user"
@@ -10,7 +10,7 @@ type AuthRoutes struct {
 	Router *router_types.Router
 }
 
-func NewUserRoutes(router *router_types.Router) *AuthRoutes {
+func NewAuthRoutes(router *router_types.Router) *AuthRoutes {
 	return &AuthRoutes{Router: router}
 }
 
@@ -22,5 +22,5 @@ func (r *AuthRoutes) Register() {
 	authService := user.NewService(userRepo)
 
 	userRouteGroup := r.Router.Api.Group("/auth")
-	userRouteGroup.Get("/login", user_handlers.Login(authService))
+	userRouteGroup.Post("/login", user_handlers.Login(authService))
 }
