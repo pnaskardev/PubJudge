@@ -20,7 +20,7 @@ type RegisterInput struct {
 
 // User Constructs your User model under entities.
 type User struct {
-	ID        primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`    
+	ID        primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
 	Firstname string             `json:"firstname,omitempty" bson:"firstname"` // Make optional in JSON if needed
 	Lastname  string             `json:"lastname,omitempty" bson:"lastname"`   // Already optional
 	Username  string             `json:"username" bson:"username"`
