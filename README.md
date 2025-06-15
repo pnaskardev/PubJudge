@@ -1,65 +1,82 @@
+# PubJudge 🧑‍⚖️
 
-# PubJudge 🧠📦
+PubJudge is a **distributed, scalable online code judging system** inspired by platforms like LeetCode, HackerRank, and Codeforces. It leverages Go (Fiber), MongoDB, Redis, Docker, and Kubernetes to achieve **horizontal scalability**, **real-time code evaluation**, and **microservice isolation**.
 
-PubJudge is a scalable, modular, and clean-code-based backend system inspired by platforms like LeetCode, designed to run, evaluate, and manage code submissions. It follows a layered Clean Architecture pattern with the aim of achieving:
+---
 
-- High scalability and testability
+## 🚀 Project Goals
 
-- Clear separation of concerns
+- ⚙️ Run and evaluate code submissions asynchronously using isolated judge workers  
+- 🧵 Event-driven architecture with Redis Pub/Sub and Streams  
+- 🛠️ Auto-scalable Kubernetes deployments with HPA (Horizontal Pod Autoscaler)  
+- 🐳 Fully containerized microservices for reproducible builds  
+- 🔐 Secure JWT-based authentication and authorization  
+- 💾 Use MongoDB for users and submissions, Redis for job/event transport  
+- 🧱 Clean and modular Go codebase for easier onboarding and collaboration  
 
-- Easy maintenance and extension
+---
 
-- Support for multiple data sources (MongoDB, Redis, PostgreSQL)
+## 📁 Tech Stack
 
-- Support horizontal scalability using Kubernetes and autoscaling.
+| Layer         | Technology            |
+|---------------|------------------------|
+| API Layer     | Go (Fiber)             |
+| Worker Engine | Go + Redis Sub/Pub     |
+| Message Queue | Redis Streams          |
+| Database      | MongoDB                |
+| Authentication| JWT                    |
+| Container     | Docker                 |
+| Orchestration | Kubernetes + HPA       |
+| Autoscaling   | Kubernetes HPA         |
+| DevOps        | GitHub Actions (planned) |
 
+---
 
+## ☸️ Kubernetes-Native Deployment
 
-## 🏗️ Project Structure
+PubJudge is cloud-native and optimized for Kubernetes:
 
-This project uses a Go monorepo with workspaces. The two main components are:
+### 🧩 Microservices as Independent Pods
 
-### 1.Gateway (/gateway)
- Responsible for:
+- **Gateway Service**  
+  - REST API server exposed via Ingress or LoadBalancer  
+  - Auto-scalable via CPU/memory metrics  
 
-- Exposing REST APIs via Fiber
+- **Judge Worker Pods**  
+  - Stateless services subscribed to job queue  
+  - Can scale up to meet submission demand  
 
-- Handling routes, services, and request validation
+- **Redis & MongoDB**  
+  - Support both managed (e.g., Redis Cloud, MongoDB Atlas) or Helm-deployed local versions  
 
-- Hydrating routes with necessary dependencies (DB, cache, config)
+### 🔐 Secrets & Config
 
-### 2. Worker (/worker)
-Responsible for:
+- Kubernetes **Secrets** for credentials  
+- **ConfigMaps** for service-wide settings  
 
-- Async job processing (code execution, test evaluation)
+### 📈 Autoscaling
 
-- Pub/Sub communication using Redis queues
-## 🎯 Goals of PubJudge
-- 🧪 Accept user code submissions
+- HPA is configured for each pod group  
+- Easily customizable for memory or CPU utilization thresholds  
 
-- ⚙️ Queue and evaluate code against test cases in an async worker system
+### 📦 Containerization
 
-- 🔐 Secure user auth with hashed passwords and JWT
+- Dockerfiles for all services with multi-stage builds  
+- Clean separation of app and runtime for optimized image size  
 
-- 🔍 Use MongoDB for users and submissions storage
+---
 
-- 💨 Use Redis for in-memory pub-sub queues and cache
+## 🧭 Architecture Overview
 
-- 📈 Scalable & Kubernetes-ready deployment
+- **Gateway** → Accepts API calls → Validates & enqueues jobs  
+- **Worker** → Subscribed to Redis → Runs user code in sandboxed environments  
+- **DB** → Stores user info, submissions, results  
 
-- 📦 Clean layered architecture for clear separation:
+---
 
-    - Entities: Core business models (e.g., User, Submission)
-    
-    -  Repository: Interfaces to interact with the database
+## 🧪 Running Locally
 
-    - Service: Application logic that uses the repositories
-
-    - Handlers: Fiber-compatible HTTP request handlers
-
-    - Presenter: Unified response formatting layer
-
-
-
-
-
+```bash
+git clone https://github.com/pnaskardev/pubjudge.git
+cd pubjudge
+go run main.go
