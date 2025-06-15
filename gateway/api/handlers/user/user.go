@@ -5,11 +5,14 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/pnaskardev/pubjudge/gateway/api/presenter"
 	"github.com/pnaskardev/pubjudge/gateway/pkg/entities"
 	"github.com/pnaskardev/pubjudge/gateway/pkg/user"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func Login(service user.Service) fiber.Handler {
@@ -53,7 +56,7 @@ func Login(service user.Service) fiber.Handler {
 // AddUser is handler/controller which creates Books in the BookShop
 func AddUser(service user.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		var requestBody entities.User
+		var requestBody entities.RegisterInput
 		err := c.BodyParser(&requestBody)
 		if err != nil {
 			c.Status(http.StatusBadRequest)
@@ -64,7 +67,24 @@ func AddUser(service user.Service) fiber.Handler {
 		// 	return c.JSON(presenter.UserErrorResponse(errors.New(
 		// 		"Please specify title and author")))
 		// }
-		result, err := service.InsertUser(&requestBody)
+
+		validate := validator.New()
+		if err := validate.Struct(&requestBody); err != nil {
+			return presenter.BadRequest(c, "Please provide all fields")
+		}
+
+		// creating the user model
+		hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(requestBody.Password), bcrypt.DefaultCost)
+		user := entities.User{
+			ID:        primitive.NewObjectID(),
+			Firstname: requestBody.Firstname,
+			Lastname:  requestBody.Lastname,
+			Username:  requestBody.Username,
+			Password:  string(hashedPassword),
+			CreatedAt: time.Now(),
+			UpdatedAt: time.Now(),
+		}
+		result, err := service.InsertUser(&user)
 		if err != nil {
 			c.Status(http.StatusInternalServerError)
 			return c.JSON(presenter.UserErrorResponse(err))

@@ -23,4 +23,5 @@ func (r *AuthRoutes) Register() {
 
 	userRouteGroup := r.Router.Api.Group("/auth")
 	userRouteGroup.Post("/login", user_handlers.Login(authService))
+	userRouteGroup.Post("/register", user_handlers.AddUser(authService))
 }
