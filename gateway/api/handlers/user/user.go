@@ -91,7 +91,6 @@ func AddUser(service user.Service) fiber.Handler {
 	}
 }
 
-// UpdateUser is handler/controller which updates data of Books in the BookShop
 func UpdateUser(service user.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		var requestBody entities.User
@@ -109,7 +108,6 @@ func UpdateUser(service user.Service) fiber.Handler {
 	}
 }
 
-// RemoveBook is handler/controller which removes Books from the BookShop
 func RemoveUser(service user.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		var requestBody entities.DeleteRequest
@@ -118,8 +116,8 @@ func RemoveUser(service user.Service) fiber.Handler {
 			c.Status(http.StatusBadRequest)
 			return c.JSON(presenter.UserErrorResponse(err))
 		}
-		bookID := requestBody.ID
-		err = service.DeleteUsers(bookID)
+		userID := requestBody.ID
+		err = service.DeleteUsers(userID)
 		if err != nil {
 			c.Status(http.StatusInternalServerError)
 			return c.JSON(presenter.UserErrorResponse(err))
@@ -132,7 +130,6 @@ func RemoveUser(service user.Service) fiber.Handler {
 	}
 }
 
-// GetBooks is handler/controller which lists all Books from the BookShop
 func GetUsers(service user.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		fetched, err := service.FetchUsers()

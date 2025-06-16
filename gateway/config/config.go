@@ -62,9 +62,6 @@ func Init() (*App, error) {
 
 }
 
-func Close(app *App) {
-
-	fmt.Println("Close invoked")
-
+func CloseDBConnection(app *App) {
 	mongo_db.CloseDB(app.Db.Client)
 }
