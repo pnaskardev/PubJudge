@@ -23,6 +23,7 @@ func NewRepo(collection *mongo.Collection) Repository {
 func (r *repository) CreateSubmit(Submission *entities.CreateSubmissionInput, userId primitive.ObjectID) (*entities.Submission, error) {
 
 	submission_instance := entities.Submission{
+		ID:       primitive.NewObjectID(),
 		UserID:   userId,
 		Code:     Submission.Code,
 		Language: Submission.Language,

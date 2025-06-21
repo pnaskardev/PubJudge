@@ -5,6 +5,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/pnaskardev/pubjudge/gateway/api/routes/auth"
 	"github.com/pnaskardev/pubjudge/gateway/api/routes/health"
+	"github.com/pnaskardev/pubjudge/gateway/api/routes/submit"
 	"github.com/pnaskardev/pubjudge/gateway/api/routes/user"
 	"github.com/pnaskardev/pubjudge/gateway/config"
 	"github.com/pnaskardev/pubjudge/gateway/types/router_types"
@@ -31,4 +32,6 @@ func (r *Router) SetupRoutes() {
 	auth.NewAuthRoutes(r.Router).Register()
 
 	user.NewUserRoutes(r.Router).Register()
+
+	submit.NewSubmitRoutes(r.Router).Register()
 }
