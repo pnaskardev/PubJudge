@@ -2,6 +2,7 @@ package submit
 
 import (
 	submission_handlers "github.com/pnaskardev/pubjudge/gateway/api/handlers/submit"
+	"github.com/pnaskardev/pubjudge/gateway/api/middleware"
 	"github.com/pnaskardev/pubjudge/gateway/pkg/submit"
 	"github.com/pnaskardev/pubjudge/gateway/types/router_types"
 )
@@ -22,7 +23,7 @@ func (r *SubmitRoutes) Register() {
 
 	submitService := submit.NewService(submitRepo)
 
-	submitRouteGroup := r.Router.Api.Group("/submit")
+	submitRouteGroup := r.Router.Api.Group("/submit", middleware.Protected(), middleware.Restricted)
 
 	submitRouteGroup.Post("/", submission_handlers.HandleSubmit(submitService))
 

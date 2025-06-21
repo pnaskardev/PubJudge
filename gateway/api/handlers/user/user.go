@@ -24,7 +24,6 @@ func Login(service user.Service) fiber.Handler {
 		}
 		fmt.Printf("Username: %s, Password: %s\n", input.Username, input.Password)
 
-		username := input.Username
 		pass := input.Password
 
 		fmt.Println(pass)
@@ -41,7 +40,8 @@ func Login(service user.Service) fiber.Handler {
 		}
 		token := jwt.New(jwt.SigningMethodHS256)
 		claims := token.Claims.(jwt.MapClaims)
-		claims["username"] = username
+		claims["id"] = user.ID
+		claims["username"] = user.Username
 		claims["exp"] = time.Now().Add(time.Duration(time.Hour * 72)).Unix()
 		t, err := token.SignedString([]byte("secret"))
 		if err != nil {
