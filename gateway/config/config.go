@@ -65,3 +65,7 @@ func Init() (*App, error) {
 func CloseDBConnection() {
 	mongo_db.CloseDB()
 }
+
+func CloseCacheConnection() {
+	cache.CloseRedisConnection()
+}

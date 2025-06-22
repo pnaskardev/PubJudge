@@ -67,7 +67,7 @@ func main() {
 
 	// Your cleanup tasks go here
 	config.CloseDBConnection()
-	// redisConn.Close()
+	config.CloseCacheConnection()
 	fmt.Println("Fiber was successful shutdown.")
 
 }

@@ -49,3 +49,7 @@ func NewRedisClient(params *redis_types.RedisClientConnectionParams) (*redis_typ
 		DB:     int(dbInt64),
 	}, nil
 }
+
+func CloseRedisConnection() {
+	redisClient.Conn().Close()
+}
