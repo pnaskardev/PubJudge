@@ -62,6 +62,6 @@ func Init() (*App, error) {
 
 }
 
-func CloseDBConnection(app *App) {
-	mongo_db.CloseDB(app.Db.Client)
+func CloseDBConnection() {
+	mongo_db.CloseDB()
 }

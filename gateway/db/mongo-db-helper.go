@@ -3,6 +3,7 @@ package mongo_db
 import (
 	"context"
 	"fmt"
+	"sync"
 
 	mongo_types "github.com/pnaskardev/pubjudge/gateway/types/mongo_types"
 	"go.mongodb.org/mongo-driver/v2/mongo"
@@ -11,6 +12,12 @@ import (
 )
 
 const dbName = "pub-judge"
+
+var (
+	Once        sync.Once
+	mongoClient *mongo.Client
+	initErr     error
+)
 
 func ConnectToMongoDB(params *mongo_types.MongoClientConnectionParams) (*mongo_types.MongoClientStruct, error) {
 
@@ -23,9 +30,27 @@ func ConnectToMongoDB(params *mongo_types.MongoClientConnectionParams) (*mongo_t
 	opts := options.Client().ApplyURI(uri).SetServerAPIOptions(serverAPI)
 
 	// Create a new client and connect to the server
-	client, err := mongo.Connect(opts)
-	if err != nil {
-		panic(err)
+	// client, err := mongo.Connect(opts)
+	// if err != nil {
+	// 	panic(err)
+	// }
+
+	Once.Do(func() {
+		mongoClient, initErr = mongo.Connect(opts)
+		// error detected now get return and go to default error handler
+		if initErr != nil {
+			return
+		}
+		// Send a ping to confirm a successful connection
+		if initErr = mongoClient.Ping(context.TODO(), readpref.Primary()); initErr != nil {
+			return
+		}
+		fmt.Println("Pinged your deployment. You successfully connected to MongoDB!")
+
+	})
+
+	if initErr != nil {
+		return nil, fmt.Errorf("MongoDB connection failed: %w", initErr)
 	}
 
 	// defer func() {
@@ -34,20 +59,14 @@ func ConnectToMongoDB(params *mongo_types.MongoClientConnectionParams) (*mongo_t
 	// 	}
 	// }()
 
-	// Send a ping to confirm a successful connection
-	if err := client.Ping(context.TODO(), readpref.Primary()); err != nil {
-		panic(err)
-	}
-	fmt.Println("Pinged your deployment. You successfully connected to MongoDB!")
+	var database mongo.Database = *mongoClient.Database(dbName)
 
-	var database mongo.Database = *client.Database(dbName)
-
-	return &mongo_types.MongoClientStruct{Client: client, Database: &database}, nil
+	return &mongo_types.MongoClientStruct{Client: mongoClient, Database: &database}, nil
 
 }
 
-func CloseDB(client *mongo.Client) error {
-	err := client.Disconnect(context.TODO())
+func CloseDB() error {
+	err := mongoClient.Disconnect(context.TODO())
 
 	if err != nil {
 		return err
