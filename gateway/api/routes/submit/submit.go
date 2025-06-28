@@ -19,7 +19,7 @@ func (r *SubmitRoutes) Register() {
 
 	submitCollection := r.Router.Deps.Db.Database.Collection("submissions")
 
-	submitRepo := submit.NewRepo(submitCollection)
+	submitRepo := submit.NewRepo(submitCollection, r.Router.Deps.Cache.Client)
 
 	submitService := submit.NewService(submitRepo)
 
