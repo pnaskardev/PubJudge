@@ -40,9 +40,18 @@ func main() {
 		Consumer: consumer,
 		Streams:  []string{stream, ">"},
 		Count:    50,
-		Block:    0,
-		NoAck:    false,
+		// it will keep on listening to messages
+		Block: 0,
+		NoAck: false,
 	}).Result()
+
+	if err != nil {
+		panic(err)
+	}
+
+	for i := 0; i < len(messages); i++ {
+		fmt.Println(messages[i])
+	}
 
 	c := make(chan os.Signal, 1)                    // Create channel to signify a signal being sent
 	signal.Notify(c, os.Interrupt, syscall.SIGTERM) // When an interrupt or termination signal is sent, notify the channel
