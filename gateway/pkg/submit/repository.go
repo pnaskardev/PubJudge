@@ -33,8 +33,13 @@ func (r *repository) CreateSubmit(Submission *entities.CreateSubmissionInput, us
 
 	// publish to redis
 	// submission is the key
-	if err := r.Redis.Publish(context.Background(), "submission", string(payload)).Err(); err != nil {
+	var values map[string]interface{}
+	if err := json.Unmarshal(payload, &values); err != nil {
 		panic(err)
+	}
+	_, streamError := r.Redis.XAdd(context.Background(), &redis.XAddArgs{Stream: "submission", Values: values}).Result()
+	if streamError != nil {
+		panic(streamError)
 	}
 
 	submission_instance := entities.Submission{
