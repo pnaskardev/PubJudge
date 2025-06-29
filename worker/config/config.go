@@ -59,3 +59,7 @@ func Init() (*App, error) {
 	return &App{Db: nil, Cache: redis_connnection_result}, nil
 
 }
+
+func CloseCacheConnection() {
+	cache.CloseRedisConnection()
+}
