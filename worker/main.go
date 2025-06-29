@@ -3,9 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"os"
-	"os/signal"
-	"syscall"
 
 	"github.com/google/uuid"
 	"github.com/joho/godotenv"
@@ -64,17 +61,17 @@ func main() {
 		}
 	}
 
-	c := make(chan os.Signal, 1)                    // Create channel to signify a signal being sent
-	signal.Notify(c, os.Interrupt, syscall.SIGTERM) // When an interrupt or termination signal is sent, notify the channel
+	// c := make(chan os.Signal, 1)                    // Create channel to signify a signal being sent
+	// signal.Notify(c, os.Interrupt, syscall.SIGTERM) // When an interrupt or termination signal is sent, notify the channel
 
-	// This blocks the main thread until an interrupt is received
-	_ = <-c
-	fmt.Println("Gracefully shutting down...")
-	// _ = app.Shutdown()
+	// // This blocks the main thread until an interrupt is received
+	// _ = <-c
+	// fmt.Println("Gracefully shutting down...")
+	// // _ = app.Shutdown()
 
-	fmt.Println("Running cleanup tasks...")
+	// fmt.Println("Running cleanup tasks...")
 
 	// Your cleanup tasks go here
 	// config.CloseDBConnection()
-	config.CloseCacheConnection()
+	// config.CloseCacheConnection()
 }
