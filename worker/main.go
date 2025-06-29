@@ -16,13 +16,12 @@ func main() {
 	if err != nil {
 		panic("ENV variables not loaded")
 	}
-	deps, err := config.Init()
-	if err != nil {
-		panic("Some Error Occured")
-	}
+	// deps, err := config.Init()
+	// if err != nil {
+	// 	panic("Some Error Occured")
+	// }
 
 	// handle Stream Events
-	
 
 	c := make(chan os.Signal, 1)                    // Create channel to signify a signal being sent
 	signal.Notify(c, os.Interrupt, syscall.SIGTERM) // When an interrupt or termination signal is sent, notify the channel
