@@ -1,0 +1,17 @@
+package types
+
+import "github.com/redis/go-redis/v9"
+
+type RedisClientConnectionParams struct {
+	Username string
+	Password string
+	Host     string
+	Port     string
+	Database string
+}
+
+// Wrapper around redis.Client
+type RedisClientStruct struct {
+	Client *redis.Client
+	DB     int
+}
