@@ -34,23 +34,34 @@ func main() {
 	}
 
 	// handle Stream Events
+	// simple while loop
+	for {
+		messages, err := deps.Cache.Client.XReadGroup(context.Background(), &redis.XReadGroupArgs{
+			Group:    group,
+			Consumer: consumer,
+			Streams:  []string{stream, ">"},
+			Count:    50,
+			// it will keep on listening to messages
+			Block: 0,
+			NoAck: false,
+		}).Result()
 
-	messages, err := deps.Cache.Client.XReadGroup(context.Background(), &redis.XReadGroupArgs{
-		Group:    group,
-		Consumer: consumer,
-		Streams:  []string{stream, ">"},
-		Count:    50,
-		// it will keep on listening to messages
-		Block: 0,
-		NoAck: false,
-	}).Result()
+		if err != nil {
+			panic(err)
+		}
 
-	if err != nil {
-		panic(err)
-	}
+		for _, stream := range messages {
+			for _, msg := range stream.Messages {
+				// Process the message
+				fmt.Printf("Processing ID %s with values: %v\n", msg.ID, msg.Values)
 
-	for i := 0; i < len(messages); i++ {
-		fmt.Println(messages[i])
+				// Acknowledge after succesfull processing
+				err := deps.Cache.Client.XAck(context.Background(), stream.Stream, group, msg.ID).Err()
+				if err != nil {
+					fmt.Printf("Failed to ack message %s: %v\n", msg.ID, err)
+				}
+			}
+		}
 	}
 
 	c := make(chan os.Signal, 1)                    // Create channel to signify a signal being sent
