@@ -3,11 +3,17 @@ package submit
 import (
 	"context"
 	"encoding/json"
+	"strings"
 
 	"github.com/pnaskardev/pubjudge/gateway/pkg/entities"
 	"github.com/redis/go-redis/v9"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/v2/mongo"
+)
+
+const (
+	stream = "submission"
+	group  = "submission_group"
 )
 
 type Repository interface {
@@ -37,9 +43,18 @@ func (r *repository) CreateSubmit(Submission *entities.CreateSubmissionInput, us
 	if err := json.Unmarshal(payload, &values); err != nil {
 		panic(err)
 	}
-	_, streamError := r.Redis.XAdd(context.Background(), &redis.XAddArgs{Stream: "submission", Values: values}).Result()
-	if streamError != nil {
+	// _, streamError := r.Redis.XAdd(context.Background(), &redis.XAddArgs{Stream: "submission", Values: values}).Result()
+
+	streamError := r.Redis.XGroupCreateMkStream(context.Background(), stream, group, "$").Err()
+
+	if streamError != nil && !strings.Contains(streamError.Error(), "BUSYGROUP") {
 		panic(streamError)
+	}
+	// I am already creating a stream and a group
+	_, addErr := r.Redis.XAdd(context.Background(), &redis.XAddArgs{Stream: stream, NoMkStream: true, Approx: true, Values: values}).Result()
+
+	if addErr != nil {
+		panic(addErr)
 	}
 
 	submission_instance := entities.Submission{
